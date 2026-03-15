@@ -15,8 +15,8 @@
 
 ### Player & Movement
 
-- [ ] **PLAY-01**: Player moves with WASD, camera follows in top-down view
-- [ ] **PLAY-02**: Player collides with walls and environment objects via Rapier colliders
+- [x] **PLAY-01**: Player moves with WASD, camera follows in top-down view
+- [x] **PLAY-02**: Player collides with walls and environment objects via Rapier colliders
 - [ ] **PLAY-03**: Interactable objects show visual proximity cue (glow or highlight)
 
 ### Reactor System
@@ -47,7 +47,7 @@
 
 - [ ] **SPAT-01**: Docking Airlock corridor as entry point
 - [ ] **SPAT-02**: Observation Catwalk connecting to reactor
-- [ ] **SPAT-03**: Circular reactor chamber (main gameplay space)
+- [x] **SPAT-03**: Circular reactor chamber (main gameplay space)
 - [ ] **SPAT-04**: Control console area adjacent to reactor
 - [ ] **SPAT-05**: Exit blast door that unlocks on reactor stabilization
 
@@ -97,8 +97,8 @@
 | SCENE-03 | Phase 2 | Pending |
 | SCENE-04 | Phase 2 | Pending |
 | SCENE-05 | Phase 3 | Pending |
-| PLAY-01 | Phase 1 | Pending |
-| PLAY-02 | Phase 1 | Pending |
+| PLAY-01 | Phase 1 | Complete |
+| PLAY-02 | Phase 1 | Complete |
 | PLAY-03 | Phase 1 | Pending |
 | REAC-01 | Phase 2 | Pending |
 | REAC-02 | Phase 2 | Pending |
@@ -117,7 +117,7 @@
 | GENR-05 | Phase 3 | Pending |
 | SPAT-01 | Phase 1 | Pending |
 | SPAT-02 | Phase 1 | Pending |
-| SPAT-03 | Phase 1 | Pending |
+| SPAT-03 | Phase 1 | Complete |
 | SPAT-04 | Phase 1 | Pending |
 | SPAT-05 | Phase 1 | Pending |
 
