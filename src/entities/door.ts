@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import RAPIER from '@dimforge/rapier2d-compat';
 import type { RoomDef, DoorDef } from '../types';
-import { createColoredRect } from '../sprites';
+import { createDoorTile, createLockedDoorTile } from '../sprites';
 import { createWallCollider } from '../physics';
 
 export interface DoorEntity {
@@ -23,8 +23,7 @@ export function createDoors(
   const doors: DoorEntity[] = [];
 
   for (const doorDef of roomDef.doors) {
-    const color = doorDef.locked ? 0xcc2222 : 0x00cccc;
-    const mesh = createColoredRect(1, 1, color);
+    const mesh = doorDef.locked ? createLockedDoorTile() : createDoorTile();
     mesh.position.set(doorDef.tileX + 0.5, 0.2, -(doorDef.tileY + 0.5));
     scene.add(mesh);
 
@@ -69,15 +68,13 @@ export function updateDoors(
     const intersecting = world.intersectionPair(door.sensorCollider, playerCollider);
 
     if (door.def.locked) {
-      // Locked doors pulse red emissive but never open
-      const mat = door.mesh.material as THREE.MeshStandardMaterial;
+      // Locked doors pulse brightness but never open
+      const mat = door.mesh.material as THREE.MeshBasicMaterial;
       if (intersecting) {
-        const pulse = 0.3 + Math.sin(performance.now() * 0.005) * 0.2;
-        mat.emissive.setHex(0xcc2222);
-        mat.emissiveIntensity = pulse;
+        const pulse = 0.6 + Math.sin(performance.now() * 0.005) * 0.4;
+        mat.color.setRGB(pulse, pulse * 0.15, pulse * 0.1);
       } else {
-        mat.emissive.setHex(0x000000);
-        mat.emissiveIntensity = 0;
+        mat.color.setHex(0xffffff);
       }
       continue;
     }
@@ -85,9 +82,7 @@ export function updateDoors(
     // Unlocked door auto-open/close
     if (intersecting && !door.isOpen) {
       door.isOpen = true;
-      const mat = door.mesh.material as THREE.MeshStandardMaterial;
-      mat.color.setHex(0x44ffff);
-      door.mesh.scale.y = 0.3;
+      door.mesh.scale.x = 0.3; // shrink to show "opening"
       // Remove wall collider if present so player can pass
       if (door.wallBody) {
         world.removeRigidBody(door.wallBody);
@@ -96,9 +91,7 @@ export function updateDoors(
       }
     } else if (!intersecting && door.isOpen) {
       door.isOpen = false;
-      const mat = door.mesh.material as THREE.MeshStandardMaterial;
-      mat.color.setHex(0x00cccc);
-      door.mesh.scale.y = 1.0;
+      door.mesh.scale.x = 1.0; // close back
     }
   }
 }

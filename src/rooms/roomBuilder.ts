@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type RAPIER from '@dimforge/rapier2d-compat';
 import type { RoomDef } from '../types';
-import { createColoredRect } from '../sprites';
+import { createColoredRect, createWallTile, createDamagedWallTile, createFloorTile, createDoorTile, createLockedDoorTile } from '../sprites';
 import { createWallCollider } from '../physics';
 
 export interface RoomData {
@@ -21,47 +21,55 @@ export function buildRoom(
   const colliders: RAPIER.Collider[] = [];
   const lights: THREE.Light[] = [];
 
-  // Floor plane
-  const floor = createColoredRect(roomDef.width, roomDef.height, 0x1a1a2e);
-  floor.position.set(roomDef.width / 2, 0, -roomDef.height / 2);
-  scene.add(floor);
-  meshes.push(floor);
-
-  // Process tiles
+  // Process tiles — pixel art for every tile
   for (let y = 0; y < roomDef.height; y++) {
     for (let x = 0; x < roomDef.width; x++) {
       const tileValue = roomDef.tiles[y][x];
 
-      if (tileValue === 1 || tileValue === 3) {
-        // Wall or damaged wall — create mesh + collider
-        const color = tileValue === 1 ? 0x334455 : 0x2a3344;
-        const wallMesh = createColoredRect(1, 1, color);
-        wallMesh.position.set(x + 0.5, 0.15, -(y + 0.5));
+      if (tileValue === 1) {
+        // Wall tile — pixel art steel panel
+        const wallMesh = createWallTile();
+        wallMesh.position.set(x + 0.5, 0.2, -(y + 0.5));
         scene.add(wallMesh);
         meshes.push(wallMesh);
 
-        // Physics collider for wall
+        const { body, collider } = createWallCollider(world, x + 0.5, y + 0.5, 0.5, 0.5);
+        bodies.push(body);
+        colliders.push(collider);
+      } else if (tileValue === 3) {
+        // Damaged wall — cracks and exposed wiring
+        const wallMesh = createDamagedWallTile();
+        wallMesh.position.set(x + 0.5, 0.2, -(y + 0.5));
+        scene.add(wallMesh);
+        meshes.push(wallMesh);
+
         const { body, collider } = createWallCollider(world, x + 0.5, y + 0.5, 0.5, 0.5);
         bodies.push(body);
         colliders.push(collider);
       } else if (tileValue === 2) {
-        // Door tile — visual only, no collider (player can walk through)
-        const doorMesh = createColoredRect(1, 1, 0x00cccc);
-        doorMesh.position.set(x + 0.5, 0.15, -(y + 0.5));
+        // Door tile — cyan sci-fi sliding door
+        const doorMesh = createDoorTile();
+        doorMesh.position.set(x + 0.5, 0.2, -(y + 0.5));
         scene.add(doorMesh);
         meshes.push(doorMesh);
+      } else if (tileValue === 0) {
+        // Floor tile — metal grating
+        const floorMesh = createFloorTile();
+        floorMesh.position.set(x + 0.5, 0.01, -(y + 0.5));
+        scene.add(floorMesh);
+        meshes.push(floorMesh);
       }
     }
   }
 
   // Emergency lighting: red at one corner, blue at opposite corner
-  const redLight = new THREE.PointLight(0xff2200, 0.4, 8);
-  redLight.position.set(1.5, 1.5, -1.5);
+  const redLight = new THREE.PointLight(0xff3300, 1.0, 12);
+  redLight.position.set(1.5, 2, -1.5);
   scene.add(redLight);
   lights.push(redLight);
 
-  const blueLight = new THREE.PointLight(0x0044ff, 0.3, 8);
-  blueLight.position.set(roomDef.width - 1.5, 1.5, -(roomDef.height - 1.5));
+  const blueLight = new THREE.PointLight(0x2266ff, 0.8, 12);
+  blueLight.position.set(roomDef.width - 1.5, 2, -(roomDef.height - 1.5));
   scene.add(blueLight);
   lights.push(blueLight);
 

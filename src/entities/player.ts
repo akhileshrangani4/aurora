@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import RAPIER from '@dimforge/rapier2d-compat';
-import { createColoredRect } from '../sprites';
+import { createPlayerSprite } from '../sprites';
 
 export const PLAYER_SPEED = 5.0;
 
@@ -25,8 +25,8 @@ export function createPlayer(
   const colliderDesc = RAPIER.ColliderDesc.ball(0.35);
   const collider = world.createCollider(colliderDesc, body);
 
-  // Visual: cyan-white colored rectangle
-  const mesh = createColoredRect(0.7, 0.7, 0x44aaff);
+  // Visual: pixel art astronaut sprite
+  const mesh = createPlayerSprite();
   mesh.position.set(spawnX, 0.1, -spawnY);
 
   scene.add(mesh);

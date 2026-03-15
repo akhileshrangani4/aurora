@@ -56,10 +56,19 @@ export function createRoomManager(
     playerEntity.body.setTranslation({ x: spawnX, y: spawnY }, true);
     syncPlayerVisuals(playerEntity);
 
-    // Start camera transition
-    cameraFrom = { x: camera.position.x, z: camera.position.z };
+    // Camera transition (or snap if first room)
+    const isFirstLoad = currentRoom === '';
     cameraTo = { x: roomDef.cameraCenter.x, z: -roomDef.cameraCenter.y };
-    transitionProgress = 0;
+    if (isFirstLoad) {
+      // First room load: snap camera immediately (no transition from origin)
+      camera.position.x = cameraTo.x;
+      camera.position.z = cameraTo.z;
+      camera.lookAt(cameraTo.x, 0, cameraTo.z);
+      transitionProgress = 1;
+    } else {
+      cameraFrom = { x: camera.position.x, z: camera.position.z };
+      transitionProgress = 0;
+    }
 
     currentRoom = roomId;
   }

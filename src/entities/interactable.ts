@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import RAPIER from '@dimforge/rapier2d-compat';
 import type { RoomDef } from '../types';
-import { createColoredRect } from '../sprites';
+import { createConsoleTile } from '../sprites';
 
 export interface InteractableEntity {
   mesh: THREE.Mesh;
@@ -20,9 +20,8 @@ export function createInteractables(
   const interactables: InteractableEntity[] = [];
 
   for (const def of roomDef.interactables) {
-    // Color based on type
-    const color = def.type === 'console_panel' ? 0xdd8833 : 0x88aa44;
-    const mesh = createColoredRect(0.8, 0.8, color);
+    // Pixel art console panel
+    const mesh = createConsoleTile();
     mesh.position.set(def.tileX + 0.5, 0.15, -(def.tileY + 0.5));
     scene.add(mesh);
 
@@ -54,15 +53,13 @@ export function updateInteractables(
 ): void {
   for (const obj of interactables) {
     const intersecting = world.intersectionPair(obj.sensorCollider, playerCollider);
-    const mat = obj.mesh.material as THREE.MeshStandardMaterial;
+    const mat = obj.mesh.material as THREE.MeshBasicMaterial;
 
     if (intersecting && !obj.isHighlighted) {
-      mat.emissive.setHex(0x003344);
-      mat.emissiveIntensity = 0.5;
+      mat.color.setHex(0x66ffaa); // bright green glow when near
       obj.isHighlighted = true;
     } else if (!intersecting && obj.isHighlighted) {
-      mat.emissive.setHex(0x000000);
-      mat.emissiveIntensity = 0;
+      mat.color.setHex(0xffffff); // back to normal
       obj.isHighlighted = false;
     }
   }

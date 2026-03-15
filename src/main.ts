@@ -8,8 +8,10 @@ import { createRoomManager } from './rooms/roomManager';
 import type { GameSystems } from './types';
 
 async function init(): Promise<void> {
+  console.log('[Aurora] Starting init...');
   // 1. Physics first (WASM must load before anything)
   const { world, characterController } = await initPhysics();
+  console.log('[Aurora] Physics initialized');
 
   // 2. Rendering
   const renderer = createRenderer();
@@ -53,7 +55,8 @@ async function init(): Promise<void> {
     },
   });
 
-  console.log('Aurora initialized. Station navigation ready.');
+  console.log('[Aurora] Initialized. Camera at', camera.position.x, camera.position.y, camera.position.z);
+  console.log('[Aurora] Station navigation ready.');
 }
 
 init().catch(console.error);

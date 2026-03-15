@@ -18,6 +18,7 @@ export function createCamera(): THREE.OrthographicCamera {
     0.1, 100
   );
   camera.position.set(0, 50, 0); // high above, looking down
+  camera.up.set(0, 0, -1); // required for top-down: camera "up" is world -Z
   camera.lookAt(0, 0, 0);
   return camera;
 }
@@ -26,7 +27,7 @@ export function createScene(): THREE.Scene {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x0a0a12); // very dark blue-black
   // Dim emergency ambient light
-  const ambient = new THREE.AmbientLight(0x1a1a2e, 0.3);
+  const ambient = new THREE.AmbientLight(0x223355, 0.5);
   scene.add(ambient);
   return scene;
 }
