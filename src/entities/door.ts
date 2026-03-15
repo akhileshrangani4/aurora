@@ -65,12 +65,17 @@ export function updateDoors(
   playerCollider: RAPIER.Collider,
 ): void {
   for (const door of doors) {
-    const intersecting = world.intersectionPair(door.sensorCollider, playerCollider);
+    // Manual distance check (more reliable than sensor pairs for kinematic bodies)
+    const playerPos = playerCollider.parent()!.translation();
+    const dx = playerPos.x - (door.def.tileX + 0.5);
+    const dy = playerPos.y - (door.def.tileY + 0.5);
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const isNear = dist < 2.5;
 
     if (door.def.locked) {
       // Locked doors pulse brightness but never open
       const mat = door.mesh.material as THREE.MeshBasicMaterial;
-      if (intersecting) {
+      if (isNear) {
         const pulse = 0.6 + Math.sin(performance.now() * 0.005) * 0.4;
         mat.color.setRGB(pulse, pulse * 0.15, pulse * 0.1);
       } else {
@@ -80,7 +85,7 @@ export function updateDoors(
     }
 
     // Unlocked door auto-open/close
-    if (intersecting && !door.isOpen) {
+    if (isNear && !door.isOpen) {
       door.isOpen = true;
       door.mesh.scale.x = 0.3; // shrink to show "opening"
       // Remove wall collider if present so player can pass
@@ -89,7 +94,7 @@ export function updateDoors(
         door.wallBody = null;
         door.wallCollider = null;
       }
-    } else if (!intersecting && door.isOpen) {
+    } else if (!isNear && door.isOpen) {
       door.isOpen = false;
       door.mesh.scale.x = 1.0; // close back
     }

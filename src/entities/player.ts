@@ -25,9 +25,9 @@ export function createPlayer(
   const colliderDesc = RAPIER.ColliderDesc.ball(0.35);
   const collider = world.createCollider(colliderDesc, body);
 
-  // Visual: pixel art astronaut sprite
+  // Visual: pixel art astronaut sprite (above all floor tiles)
   const mesh = createPlayerSprite();
-  mesh.position.set(spawnX, 0.1, -spawnY);
+  mesh.position.set(spawnX, 0.5, -spawnY);
 
   scene.add(mesh);
 

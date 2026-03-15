@@ -52,13 +52,19 @@ export function updateInteractables(
   playerCollider: RAPIER.Collider,
 ): void {
   for (const obj of interactables) {
-    const intersecting = world.intersectionPair(obj.sensorCollider, playerCollider);
+    // Manual distance check (more reliable than sensor pairs for kinematic bodies)
+    const playerPos = playerCollider.parent()!.translation();
+    const dx = playerPos.x - (obj.def.tileX + 0.5);
+    const dy = playerPos.y - (obj.def.tileY + 0.5);
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const isNear = dist < 2.0;
+
     const mat = obj.mesh.material as THREE.MeshBasicMaterial;
 
-    if (intersecting && !obj.isHighlighted) {
+    if (isNear && !obj.isHighlighted) {
       mat.color.setHex(0x66ffaa); // bright green glow when near
       obj.isHighlighted = true;
-    } else if (!intersecting && obj.isHighlighted) {
+    } else if (!isNear && obj.isHighlighted) {
       mat.color.setHex(0xffffff); // back to normal
       obj.isHighlighted = false;
     }

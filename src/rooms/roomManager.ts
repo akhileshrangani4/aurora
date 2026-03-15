@@ -100,9 +100,10 @@ export function createRoomManager(
         const dy = playerPos.y - (door.def.tileY + 0.5);
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < 0.5) {
+        // Trigger transition when player is close to door (1.2 tile radius)
+        if (dist < 1.2) {
           loadRoom(door.def.leadsTo, door.def.spawnAtX, door.def.spawnAtY);
-          return; // exit update after loading new room
+          return;
         }
       }
     }

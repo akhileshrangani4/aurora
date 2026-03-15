@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-const GAME_HEIGHT = 14; // world units visible vertically
+const GAME_HEIGHT = 16; // world units visible vertically
 
 export function createRenderer(): THREE.WebGLRenderer {
   const renderer = new THREE.WebGLRenderer({ antialias: false });

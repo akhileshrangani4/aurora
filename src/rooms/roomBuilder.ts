@@ -1,7 +1,11 @@
 import * as THREE from 'three';
 import type RAPIER from '@dimforge/rapier2d-compat';
 import type { RoomDef } from '../types';
-import { createColoredRect, createWallTile, createDamagedWallTile, createFloorTile, createDoorTile, createLockedDoorTile } from '../sprites';
+import {
+  createColoredRect, createWallTile, createDamagedWallTile, createFloorTile,
+  createDoorTile, createLockedDoorTile, createPipeTile, createCrateTile,
+  createVentTile, createMachineryTile, createReactorCoreTile,
+} from '../sprites';
 import { createWallCollider } from '../physics';
 
 export interface RoomData {
@@ -52,6 +56,55 @@ export function buildRoom(
         doorMesh.position.set(x + 0.5, 0.2, -(y + 0.5));
         scene.add(doorMesh);
         meshes.push(doorMesh);
+      } else if (tileValue === 4) {
+        // Pipe — walkable decoration (no collider)
+        const pipeMesh = createPipeTile();
+        pipeMesh.position.set(x + 0.5, 0.1, -(y + 0.5));
+        scene.add(pipeMesh);
+        meshes.push(pipeMesh);
+        // Floor underneath
+        const f = createFloorTile();
+        f.position.set(x + 0.5, 0.01, -(y + 0.5));
+        scene.add(f);
+        meshes.push(f);
+      } else if (tileValue === 5) {
+        // Crate — solid, blocks player
+        const crateMesh = createCrateTile();
+        crateMesh.position.set(x + 0.5, 0.2, -(y + 0.5));
+        scene.add(crateMesh);
+        meshes.push(crateMesh);
+        const { body, collider } = createWallCollider(world, x + 0.5, y + 0.5, 0.45, 0.45);
+        bodies.push(body);
+        colliders.push(collider);
+      } else if (tileValue === 6) {
+        // Vent — floor decoration, walkable
+        const ventMesh = createVentTile();
+        ventMesh.position.set(x + 0.5, 0.02, -(y + 0.5));
+        scene.add(ventMesh);
+        meshes.push(ventMesh);
+      } else if (tileValue === 7) {
+        // Machinery — solid, blocks player
+        const machMesh = createMachineryTile();
+        machMesh.position.set(x + 0.5, 0.2, -(y + 0.5));
+        scene.add(machMesh);
+        meshes.push(machMesh);
+        const { body, collider } = createWallCollider(world, x + 0.5, y + 0.5, 0.5, 0.5);
+        bodies.push(body);
+        colliders.push(collider);
+      } else if (tileValue === 8) {
+        // Reactor core — glowing center, solid
+        const coreMesh = createReactorCoreTile();
+        coreMesh.position.set(x + 0.5, 0.25, -(y + 0.5));
+        scene.add(coreMesh);
+        meshes.push(coreMesh);
+        const { body, collider } = createWallCollider(world, x + 0.5, y + 0.5, 0.5, 0.5);
+        bodies.push(body);
+        colliders.push(collider);
+        // Add glow light
+        const glow = new THREE.PointLight(0x6633ff, 1.2, 6);
+        glow.position.set(x + 0.5, 1.5, -(y + 0.5));
+        scene.add(glow);
+        lights.push(glow);
       } else if (tileValue === 0) {
         // Floor tile — metal grating
         const floorMesh = createFloorTile();
@@ -62,7 +115,7 @@ export function buildRoom(
     }
   }
 
-  // Emergency lighting: red at one corner, blue at opposite corner
+  // Emergency lighting: red and blue at corners
   const redLight = new THREE.PointLight(0xff3300, 1.0, 12);
   redLight.position.set(1.5, 2, -1.5);
   scene.add(redLight);
@@ -72,6 +125,17 @@ export function buildRoom(
   blueLight.position.set(roomDef.width - 1.5, 2, -(roomDef.height - 1.5));
   scene.add(blueLight);
   lights.push(blueLight);
+
+  // Additional atmospheric lights at center and other corners
+  const centerLight = new THREE.PointLight(0x334466, 0.5, 10);
+  centerLight.position.set(roomDef.width / 2, 3, -roomDef.height / 2);
+  scene.add(centerLight);
+  lights.push(centerLight);
+
+  const cornerLight3 = new THREE.PointLight(0xff2200, 0.4, 8);
+  cornerLight3.position.set(roomDef.width - 1.5, 2, -1.5);
+  scene.add(cornerLight3);
+  lights.push(cornerLight3);
 
   return { meshes, bodies, colliders, lights };
 }

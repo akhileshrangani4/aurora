@@ -256,6 +256,150 @@ export function createLockedDoorTile(): THREE.Mesh {
   return makeTileMesh('locked_door', () => createPixelTexture(pixels, 16), false);
 }
 
+/** 16x16 pipe tile — horizontal coolant pipe */
+export function createPipeTile(): THREE.Mesh {
+  const D = '#1a2030';
+  const M = '#3a4858';
+  const P = '#2a5566'; // pipe body
+  const H = '#3a7788'; // pipe highlight
+  const L = '#1a3a44'; // pipe shadow
+  const V = '#224455'; // valve
+  const pixels: string[][] = [
+    [D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D],
+    [D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D],
+    [D,D,D,D,D,V,V,V,V,V,V,D,D,D,D,D],
+    [D,D,D,D,V,V,M,M,M,M,V,V,D,D,D,D],
+    [L,L,L,L,L,L,L,L,L,L,L,L,L,L,L,L],
+    [P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P],
+    [H,H,P,P,H,H,P,P,H,H,P,P,H,H,P,P],
+    [P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P],
+    [P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P],
+    [H,H,P,P,H,H,P,P,H,H,P,P,H,H,P,P],
+    [P,P,P,P,P,P,P,P,P,P,P,P,P,P,P,P],
+    [L,L,L,L,L,L,L,L,L,L,L,L,L,L,L,L],
+    [D,D,D,D,V,V,M,M,M,M,V,V,D,D,D,D],
+    [D,D,D,D,D,V,V,V,V,V,V,D,D,D,D,D],
+    [D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D],
+    [D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D],
+  ];
+  return makeTileMesh('pipe', () => createPixelTexture(pixels, 16));
+}
+
+/** 16x16 crate / storage container */
+export function createCrateTile(): THREE.Mesh {
+  const D = '#2a2018';
+  const W = '#5a4830'; // wood/metal body
+  const L = '#6a5838'; // lighter
+  const S = '#3a3020'; // shadow
+  const R = '#887044'; // rim highlight
+  const B = '#4a3828'; // band
+  const pixels: string[][] = [
+    [D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D],
+    [D,R,R,R,R,R,R,R,R,R,R,R,R,R,R,D],
+    [D,R,W,W,W,W,W,B,B,W,W,W,W,W,R,D],
+    [D,R,W,L,W,W,W,B,B,W,W,W,L,W,R,D],
+    [D,R,W,W,W,W,W,B,B,W,W,W,W,W,R,D],
+    [D,R,W,W,W,W,W,B,B,W,W,W,W,W,R,D],
+    [D,R,B,B,B,B,B,B,B,B,B,B,B,B,R,D],
+    [D,R,B,B,B,B,B,S,S,B,B,B,B,B,R,D],
+    [D,R,B,B,B,B,B,S,S,B,B,B,B,B,R,D],
+    [D,R,B,B,B,B,B,B,B,B,B,B,B,B,R,D],
+    [D,R,W,W,W,W,W,B,B,W,W,W,W,W,R,D],
+    [D,R,W,W,W,W,W,B,B,W,W,W,W,W,R,D],
+    [D,R,W,L,W,W,W,B,B,W,W,W,L,W,R,D],
+    [D,R,W,W,W,W,W,B,B,W,W,W,W,W,R,D],
+    [D,R,R,R,R,R,R,R,R,R,R,R,R,R,R,D],
+    [D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D],
+  ];
+  return makeTileMesh('crate', () => createPixelTexture(pixels, 16));
+}
+
+/** 16x16 vent grate on floor */
+export function createVentTile(): THREE.Mesh {
+  const D = '#0e1218';
+  const G = '#1a2230'; // grate bar
+  const H = '#0a0e14'; // hole (deep black)
+  const M = '#222e3a'; // metal edge
+  const pixels: string[][] = [
+    [M,M,M,M,M,M,M,M,M,M,M,M,M,M,M,M],
+    [M,G,H,H,G,H,H,G,H,H,G,H,H,G,H,M],
+    [M,H,H,H,H,H,H,H,H,H,H,H,H,H,H,M],
+    [M,G,H,H,G,H,H,G,H,H,G,H,H,G,H,M],
+    [M,H,H,H,H,H,H,H,H,H,H,H,H,H,H,M],
+    [M,G,H,H,G,H,H,G,H,H,G,H,H,G,H,M],
+    [M,H,H,H,H,H,H,H,H,H,H,H,H,H,H,M],
+    [M,G,H,H,G,H,H,G,H,H,G,H,H,G,H,M],
+    [M,H,H,H,H,H,H,H,H,H,H,H,H,H,H,M],
+    [M,G,H,H,G,H,H,G,H,H,G,H,H,G,H,M],
+    [M,H,H,H,H,H,H,H,H,H,H,H,H,H,H,M],
+    [M,G,H,H,G,H,H,G,H,H,G,H,H,G,H,M],
+    [M,H,H,H,H,H,H,H,H,H,H,H,H,H,H,M],
+    [M,G,H,H,G,H,H,G,H,H,G,H,H,G,H,M],
+    [M,H,H,H,H,H,H,H,H,H,H,H,H,H,H,M],
+    [M,M,M,M,M,M,M,M,M,M,M,M,M,M,M,M],
+  ];
+  return makeTileMesh('vent', () => createPixelTexture(pixels, 16));
+}
+
+/** 16x16 machinery / generator unit */
+export function createMachineryTile(): THREE.Mesh {
+  const D = '#1a2030';
+  const M = '#3a4858';
+  const L = '#506878'; // light panel
+  const G = '#22aa44'; // green indicator
+  const R = '#cc3322'; // red indicator
+  const S = '#2a3848';
+  const C = '#445566'; // casing
+  const pixels: string[][] = [
+    [D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D],
+    [D,C,C,C,C,C,C,C,C,C,C,C,C,C,C,D],
+    [D,C,L,L,S,S,S,C,C,S,S,S,L,L,C,D],
+    [D,C,L,L,S,G,S,C,C,S,R,S,L,L,C,D],
+    [D,C,S,S,S,S,S,S,S,S,S,S,S,S,C,D],
+    [D,C,M,M,M,M,M,M,M,M,M,M,M,M,C,D],
+    [D,C,M,L,M,M,L,M,M,L,M,M,L,M,C,D],
+    [D,C,M,M,M,M,M,M,M,M,M,M,M,M,C,D],
+    [D,C,M,M,M,M,M,M,M,M,M,M,M,M,C,D],
+    [D,C,M,L,M,M,L,M,M,L,M,M,L,M,C,D],
+    [D,C,M,M,M,M,M,M,M,M,M,M,M,M,C,D],
+    [D,C,S,S,S,S,S,S,S,S,S,S,S,S,C,D],
+    [D,C,S,G,S,S,G,S,S,G,S,S,G,S,C,D],
+    [D,C,S,S,S,S,S,S,S,S,S,S,S,S,C,D],
+    [D,C,C,C,C,C,C,C,C,C,C,C,C,C,C,D],
+    [D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D],
+  ];
+  return makeTileMesh('machinery', () => createPixelTexture(pixels, 16));
+}
+
+/** 16x16 reactor core tile — glowing center piece */
+export function createReactorCoreTile(): THREE.Mesh {
+  const D = '#1a1030';
+  const R = '#2a1840'; // ring
+  const G = '#4422aa'; // glow
+  const B = '#6633ff'; // bright glow
+  const W = '#8855ff'; // white-hot center
+  const C = '#3322cc'; // core
+  const pixels: string[][] = [
+    [D,D,D,D,D,R,R,R,R,R,R,D,D,D,D,D],
+    [D,D,D,R,R,G,G,G,G,G,G,R,R,D,D,D],
+    [D,D,R,G,G,G,B,B,B,B,G,G,G,R,D,D],
+    [D,R,G,G,B,B,B,C,C,B,B,B,G,G,R,D],
+    [D,R,G,B,B,C,C,C,C,C,C,B,B,G,R,D],
+    [R,G,G,B,C,C,W,W,W,W,C,C,B,G,G,R],
+    [R,G,B,B,C,W,W,W,W,W,W,C,B,B,G,R],
+    [R,G,B,C,C,W,W,W,W,W,W,C,C,B,G,R],
+    [R,G,B,C,C,W,W,W,W,W,W,C,C,B,G,R],
+    [R,G,B,B,C,W,W,W,W,W,W,C,B,B,G,R],
+    [R,G,G,B,C,C,W,W,W,W,C,C,B,G,G,R],
+    [D,R,G,B,B,C,C,C,C,C,C,B,B,G,R,D],
+    [D,R,G,G,B,B,B,C,C,B,B,B,G,G,R,D],
+    [D,D,R,G,G,G,B,B,B,B,G,G,G,R,D,D],
+    [D,D,D,R,R,G,G,G,G,G,G,R,R,D,D,D],
+    [D,D,D,D,D,R,R,R,R,R,R,D,D,D,D,D],
+  ];
+  return makeTileMesh('reactor_core', () => createPixelTexture(pixels, 16), false);
+}
+
 /** 16x16 interactable console panel */
 export function createConsoleTile(): THREE.Mesh {
   const D = '#1a2030';
