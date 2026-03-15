@@ -17,7 +17,7 @@
 
 - [x] **PLAY-01**: Player moves with WASD, camera follows in top-down view
 - [x] **PLAY-02**: Player collides with walls and environment objects via Rapier colliders
-- [ ] **PLAY-03**: Interactable objects show visual proximity cue (glow or highlight)
+- [x] **PLAY-03**: Interactable objects show visual proximity cue (glow or highlight)
 
 ### Reactor System
 
@@ -45,11 +45,11 @@
 
 ### Spatial Layout
 
-- [ ] **SPAT-01**: Docking Airlock corridor as entry point
-- [ ] **SPAT-02**: Observation Catwalk connecting to reactor
+- [x] **SPAT-01**: Docking Airlock corridor as entry point
+- [x] **SPAT-02**: Observation Catwalk connecting to reactor
 - [x] **SPAT-03**: Circular reactor chamber (main gameplay space)
-- [ ] **SPAT-04**: Control console area adjacent to reactor
-- [ ] **SPAT-05**: Exit blast door that unlocks on reactor stabilization
+- [x] **SPAT-04**: Control console area adjacent to reactor
+- [x] **SPAT-05**: Exit blast door that unlocks on reactor stabilization
 
 ## v2 Requirements
 
@@ -99,7 +99,7 @@
 | SCENE-05 | Phase 3 | Pending |
 | PLAY-01 | Phase 1 | Complete |
 | PLAY-02 | Phase 1 | Complete |
-| PLAY-03 | Phase 1 | Pending |
+| PLAY-03 | Phase 1 | Complete |
 | REAC-01 | Phase 2 | Pending |
 | REAC-02 | Phase 2 | Pending |
 | REAC-03 | Phase 2 | Pending |
@@ -115,11 +115,11 @@
 | GENR-03 | Phase 3 | Pending |
 | GENR-04 | Phase 3 | Pending |
 | GENR-05 | Phase 3 | Pending |
-| SPAT-01 | Phase 1 | Pending |
-| SPAT-02 | Phase 1 | Pending |
+| SPAT-01 | Phase 1 | Complete |
+| SPAT-02 | Phase 1 | Complete |
 | SPAT-03 | Phase 1 | Complete |
-| SPAT-04 | Phase 1 | Pending |
-| SPAT-05 | Phase 1 | Pending |
+| SPAT-04 | Phase 1 | Complete |
+| SPAT-05 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 28 total
