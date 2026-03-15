@@ -1,5 +1,3 @@
-import type * as THREE from 'three';
-import type RAPIER from '@dimforge/rapier2d-compat';
 import type { GameSystems } from '../types';
 import type { Player } from '../entities/player';
 import { syncPlayerVisuals } from '../entities/player';
@@ -8,6 +6,8 @@ import type { RoomData } from './roomBuilder';
 import { ROOMS } from './layouts';
 import { createDoors, updateDoors, destroyDoors } from '../entities/door';
 import type { DoorEntity } from '../entities/door';
+import { createInteractables, updateInteractables, destroyInteractables } from '../entities/interactable';
+import type { InteractableEntity } from '../entities/interactable';
 
 export interface RoomManager {
   currentRoom: string;
@@ -25,7 +25,7 @@ export function createRoomManager(
   let currentRoom = '';
   let currentRoomData: RoomData | null = null;
   let currentDoors: DoorEntity[] = [];
-  let currentInteractables: { destroy: () => void; update: () => void } | null = null;
+  let currentInteractables: InteractableEntity[] = [];
 
   // Camera transition state
   let transitionProgress = 1; // start complete (no initial transition)
@@ -37,10 +37,8 @@ export function createRoomManager(
     if (currentRoomData) {
       destroyRoom(currentRoomData, world, scene);
       destroyDoors(currentDoors, world, scene);
-      if (currentInteractables) {
-        currentInteractables.destroy();
-        currentInteractables = null;
-      }
+      destroyInteractables(currentInteractables, world, scene);
+      currentInteractables = [];
     }
 
     const roomDef = ROOMS[roomId];
@@ -52,6 +50,7 @@ export function createRoomManager(
     // Build new room
     currentRoomData = buildRoom(roomDef, world, scene);
     currentDoors = createDoors(roomDef, world, scene, playerEntity.collider);
+    currentInteractables = createInteractables(roomDef, world, scene, playerEntity.collider);
 
     // Teleport player
     playerEntity.body.setTranslation({ x: spawnX, y: spawnY }, true);
@@ -78,10 +77,8 @@ export function createRoomManager(
     // Update doors
     updateDoors(currentDoors, world, playerEntity.collider);
 
-    // Update interactables if present
-    if (currentInteractables) {
-      currentInteractables.update();
-    }
+    // Update interactables
+    updateInteractables(currentInteractables, world, playerEntity.collider);
 
     // Check door transitions (only when not transitioning)
     if (transitionProgress >= 1) {
@@ -106,25 +103,11 @@ export function createRoomManager(
     return transitionProgress < 1;
   }
 
-  // Expose interactable registration for Task 2
-  const manager: RoomManager & {
-    _setInteractables: (interactables: { destroy: () => void; update: () => void } | null) => void;
-    _getCurrentDoors: () => DoorEntity[];
-    _getWorld: () => RAPIER.World;
-    _getScene: () => THREE.Scene;
-    _getPlayerCollider: () => RAPIER.Collider;
-  } = {
+  return {
     get currentRoom() { return currentRoom; },
     set currentRoom(val: string) { currentRoom = val; },
     loadRoom,
     update,
     isTransitioning,
-    _setInteractables(interactables) { currentInteractables = interactables; },
-    _getCurrentDoors() { return currentDoors; },
-    _getWorld() { return world; },
-    _getScene() { return scene; },
-    _getPlayerCollider() { return playerEntity.collider; },
   };
-
-  return manager;
 }
