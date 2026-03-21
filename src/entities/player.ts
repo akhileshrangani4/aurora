@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import RAPIER from '@dimforge/rapier2d-compat';
 import { createPlayerSprite } from '../sprites';
+import type { CollisionAudioSystem } from '../physics';
+import { updateCollisionAudio } from '../physics';
 
 export const PLAYER_SPEED = 5.0;
 
@@ -8,6 +10,7 @@ export interface Player {
   mesh: THREE.Mesh;
   body: RAPIER.RigidBody;
   collider: RAPIER.Collider;
+  collisionAudio?: CollisionAudioSystem;
 }
 
 export function createPlayer(
@@ -16,6 +19,7 @@ export function createPlayer(
   scene: THREE.Scene,
   spawnX: number,
   spawnY: number,
+  collisionAudio?: CollisionAudioSystem,
 ): Player {
   // Kinematic position-based body at spawn point
   const bodyDesc = RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(spawnX, spawnY);
@@ -31,7 +35,7 @@ export function createPlayer(
 
   scene.add(mesh);
 
-  return { mesh, body, collider };
+  return { mesh, body, collider, collisionAudio };
 }
 
 export function updatePlayer(
@@ -46,6 +50,10 @@ export function updatePlayer(
 
   characterController.computeColliderMovement(player.collider, { x: desiredX, y: desiredY });
   const corrected = characterController.computedMovement();
+
+  if (player.collisionAudio) {
+    updateCollisionAudio(player.collisionAudio, characterController, { x: desiredX, y: desiredY }, corrected);
+  }
 
   const pos = player.body.translation();
   player.body.setNextKinematicTranslation({ x: pos.x + corrected.x, y: pos.y + corrected.y });

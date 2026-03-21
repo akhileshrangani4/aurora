@@ -1,11 +1,41 @@
 import { createRenderer, createCamera, createScene, handleResize } from './renderer';
-import { initPhysics } from './physics';
+import { initPhysics, createCollisionAudioSystem } from './physics';
 import { createInputHandler } from './input';
 import { startGameLoop } from './loop';
 import { createPlayer, updatePlayer, syncPlayerVisuals } from './entities/player';
 import { ROOMS } from './rooms/layouts';
 import { createRoomManager } from './rooms/roomManager';
 import type { GameSystems } from './types';
+
+function createCollisionSoundPlayer(): (volume: number) => void {
+  let audioContext: AudioContext | null = null;
+
+  return (volume: number) => {
+    const AudioContextCtor = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AudioContextCtor) return;
+
+    audioContext ??= new AudioContextCtor();
+    if (audioContext.state === 'suspended') {
+      void audioContext.resume();
+    }
+
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.type = 'triangle';
+    oscillator.frequency.setValueAtTime(180, audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(70, audioContext.currentTime + 0.08);
+
+    gain.gain.setValueAtTime(Math.max(0.02, volume * 0.12), audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.08);
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.08);
+  };
+}
 
 async function init(): Promise<void> {
   console.log('[Aurora] Starting init...');
@@ -31,7 +61,15 @@ async function init(): Promise<void> {
 
   // 6. Create player at reactor's spawn point
   const reactorDef = ROOMS['reactor'];
-  const player = createPlayer(world, characterController, scene, reactorDef.spawnPoint!.x, reactorDef.spawnPoint!.y);
+  const collisionAudio = createCollisionAudioSystem(createCollisionSoundPlayer());
+  const player = createPlayer(
+    world,
+    characterController,
+    scene,
+    reactorDef.spawnPoint!.x,
+    reactorDef.spawnPoint!.y,
+    collisionAudio,
+  );
 
   // 7. Create room manager and load initial room
   const roomManager = createRoomManager(systems, player);
