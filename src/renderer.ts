@@ -43,3 +43,4 @@ export function handleResize(camera: THREE.OrthographicCamera, renderer: THREE.W
 }
 
 export { GAME_HEIGHT };
+// TODO: add health bar component for player entity
