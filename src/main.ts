@@ -1,10 +1,12 @@
-import { createRenderer, createCamera, createScene, handleResize } from './renderer';
+import { createRenderer, createCamera, createScene, createThemeController, handleResize } from './renderer';
 import { initPhysics } from './physics';
 import { createInputHandler } from './input';
 import { startGameLoop } from './loop';
 import { createPlayer, updatePlayer, syncPlayerVisuals } from './entities/player';
 import { ROOMS } from './rooms/layouts';
 import { createRoomManager } from './rooms/roomManager';
+import { createSettingsUI } from './ui';
+import { loadThemePreference, saveThemePreference, type ThemeMode } from './theme';
 import type { GameSystems } from './types';
 
 async function init(): Promise<void> {
@@ -17,6 +19,17 @@ async function init(): Promise<void> {
   const renderer = createRenderer();
   const scene = createScene();
   const camera = createCamera();
+  const themeController = createThemeController(scene);
+
+  const applyTheme = (mode: ThemeMode) => {
+    themeController.applyTheme(mode);
+    settingsUI.setTheme(mode);
+    saveThemePreference(mode);
+  };
+
+  const initialTheme = loadThemePreference();
+  const settingsUI = createSettingsUI(initialTheme, applyTheme);
+  applyTheme(initialTheme);
 
   // 3. Input
   const input = createInputHandler();

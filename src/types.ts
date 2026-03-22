@@ -1,5 +1,6 @@
 import type * as THREE from 'three';
 import type RAPIER from '@dimforge/rapier2d-compat';
+import type { ThemeMode } from './theme';
 
 export interface RoomDef {
   id: string;
@@ -51,4 +52,9 @@ export interface GameSystems {
   world: RAPIER.World;
   characterController: RAPIER.KinematicCharacterController;
   input: InputState;
+}
+
+export interface ThemeController {
+  mode: ThemeMode;
+  applyTheme: (mode: ThemeMode) => void;
 }

@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { getThemeConfig, type ThemeMode } from './theme';
+import type { ThemeController } from './types';
 
 const GAME_HEIGHT = 16; // world units visible vertically
 
@@ -25,11 +27,26 @@ export function createCamera(): THREE.OrthographicCamera {
 
 export function createScene(): THREE.Scene {
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0a0a12); // very dark blue-black
-  // Dim emergency ambient light
-  const ambient = new THREE.AmbientLight(0x223355, 0.5);
-  scene.add(ambient);
   return scene;
+}
+
+export function createThemeController(scene: THREE.Scene): ThemeController {
+  const ambient = new THREE.AmbientLight();
+  scene.add(ambient);
+
+  const controller: ThemeController = {
+    mode: 'dark',
+    applyTheme(mode: ThemeMode) {
+      const theme = getThemeConfig(mode);
+      scene.background = new THREE.Color(theme.background);
+      ambient.color = new THREE.Color(theme.ambient);
+      ambient.intensity = theme.ambientIntensity;
+      controller.mode = mode;
+    },
+  };
+
+  controller.applyTheme('dark');
+  return controller;
 }
 
 export function handleResize(camera: THREE.OrthographicCamera, renderer: THREE.WebGLRenderer): void {
